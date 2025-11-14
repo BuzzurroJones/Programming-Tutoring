@@ -1,1 +1,1 @@
-Exercises and solution done for programming 25/26
+Exercises and solution done during tutoring lectures for programming 25/26
