@@ -46,7 +46,34 @@ the function must return the dictionary {'a': 'dog-ox'}.
 
 """
 def func1 (dict1, dict2):
-    pass
+    with open(dict1, "r") as f:
+        file = f.readlines()
+    dict1 = {}
+    for line in file:
+        line = line.split()
+        if len(line) == 2:
+            dict1[line[0]] = line[1]
+
+    with open(dict2, "r") as f:
+        file = f.readlines()
+    dict2 = {}
+    for line in file:
+        line = line.split()
+        if len(line) == 2:
+            dict2[line[0]] = line[1]
+
+    keys = set(dict1) & set(dict2)
+
+    to_return = {}
+    for key in keys:
+        words = []
+        words.append(dict1[key])
+        words.append(dict2[key])
+        words = sorted(words)
+        to_return[key] = "-".join(words)
+    return to_return
+
+
     # completa il codice della funzione
 
 
@@ -72,7 +99,19 @@ output.
 """
 
 def func2(input_file, output_file):
-    pass
+    with open(input_file, "r") as f:
+        file = f.readlines()
+    to_write = ""
+    to_return = 0
+
+    for line in file:
+        n = [int(n) for n in line.split(",")]
+        to_write += str(n) + "\n"
+        to_return += len(n)
+    
+    with open(output_file, "w") as f:
+        f.write(to_write)
+    return to_return
     # completa il codice della funzione
 
 
@@ -103,7 +142,17 @@ to func3/out_01.txt.
 """
 
 def func3(file_in : str, file_out: str, length:int, chars:str) -> list[str]:
-    pass
+    with open(file_in, "r") as f:
+        file = f.read()
+    
+    words = file.split()
+    words = [w for w in words if len(w) >= length and set(w) & set(chars)]
+    words = sorted(words, key= lambda x: (-len(x), x))
+
+    with open(file_out, "w") as f:
+        f.write(" ".join(words))
+    return words
+
     # completa il codice della funzione
 
 
@@ -112,9 +161,6 @@ def func3(file_in : str, file_out: str, length:int, chars:str) -> list[str]:
 # ---------------------------- FUNC 4 ---------------------------- #
 '''
 Func 4: 6 punti
-Ecco la **traduzione in inglese**:
-
----
 
 Define the function `func4(textfile_in, textfile_out)` which takes as arguments:
 
@@ -138,9 +184,19 @@ then in the file `textfile_out` the function must write the line
 and return the value `5`.
 
 '''
+def criterio(n):
+    for c in "+-.":
+        n = n.replace(c, "")
+    return -len(n)
 
 def func4(textfile_in, textfile_out):
-    pass
+    with open(textfile_in, "r") as f:
+        file = f.read()
+    numbers = file.split()
+    numbers = sorted(numbers, key=lambda n: (criterio(n), float(n)))
+    with open(textfile_out, "w") as f:
+        f.write(", ".join(numbers))
+    return len(numbers)
     # completa il codice della funzione
 
 
@@ -185,7 +241,21 @@ as a list of lists:
 
 '''
 def func5(input_filename):
-    pass
+    with open(input_filename, 'r') as file:
+       mat_in = file.readlines()
+
+    matrice = []
+    for line in mat_in:
+        matrice.append([int(n) for n in line.split()])
+
+    to_return = []
+    for c in range(len(matrice[0]) - 1, -1, -1):
+        supp = []
+        for l in range(len(matrice) - 1, -1, -1):
+            supp.append(matrice[l][c])
+        to_return.append(supp)
+
+    return to_return
     # completa il codice della funzione
 
 
