@@ -40,8 +40,13 @@ import images
 
 
 def func1(img_in) -> int:
-    
-    pass
+    img = images.load(img_in)
+    red = 0
+    for row in img:
+        for pixel in row:
+            if pixel[0] > 150:
+                red +=1
+    return red
 
 # %% ----------------------------------- FUNC2 ------------------------- #
 """ func2: 8 punti
@@ -65,7 +70,18 @@ import images
 
 
 def func2(img_in: str, img_out: str, val: int) -> int:
-    pass
+    img = images.load(img_in)
+    count = 0
+    for i, riga in enumerate(img):
+        for j, pixel in enumerate(riga):
+            r, g, b = pixel
+            b += val
+            if b > 255:
+                count += 1
+                b = b % 256
+            img[i][j] = (r, g, b)
+    images.save(img, img_out)
+    return count
     
 
 # %% ----------------------------------- FUNC3 ------------------------- #
@@ -102,12 +118,24 @@ import images
 
 
 def func3(input_pngfile):
-    pass
-
-        
-
-
-
+    img = images.load(input_pngfile)
+    risultato = []
+    w = (255, 255, 255)   
+    for y in range(len(img)):
+        found_segment = False
+        for x in range(len(img[0])):
+            pixel = img[y][x]
+            if pixel == w:
+                if not found_segment:
+                    start_x = x
+                    found_segment = True
+                end_x = x
+            else:
+                if found_segment:
+                    break
+        if found_segment:
+            risultato.append( (y, start_x, end_x) )
+    return risultato
 
 # %% ----------------------------------- FUNC4 ------------------------- #
 ''' func4: 8 punti
@@ -140,4 +168,26 @@ BBBBBB*B
 import images
 
 def func4(input_file_name, output_file_name):
-    pass
+    img = images.load(input_file_name)
+    b = (0, 0, 0)
+    img_out = [[b for _ in range(len(img[0]))] for _ in range(len(img))]
+    count = 0
+    for y, row in enumerate(img):
+        for x, pixel in enumerate(row):
+            if pixel != b:
+                copia = False
+                if x == 0:
+                    if img[y][x+1] == b:
+                        copia = True
+                elif x == len(img[0]) - 1:
+                    if img[y][x-1] == b:
+                        copia = True
+                else:
+                    if img[y][x-1] == b and img[y][x+1] == b:
+                        copia = True 
+                if copia:
+                    count += 1
+                    img_out[y][x] = pixel
+    images.save(img_out, output_file_name)
+    
+    return count
