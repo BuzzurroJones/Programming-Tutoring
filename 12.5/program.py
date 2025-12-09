@@ -27,9 +27,9 @@ To quickly comment/uncomment code, you can use the
 key combination Control + 1
 """
 
-nome = "NOME"
-cognome = "COGNOME"
-matricola = "MATRICOLA"
+nome = "T"
+cognome = "C"
+matricola = "1"
 
 # %% ----------------------------------- FUNC1 ------------------------- #
 
@@ -45,7 +45,15 @@ module and cannot be defined within other functions or classes).
 
 
 def func1(l: List, counts: Dict = None) -> Dict:
-    pass
+    if counts is None:
+        counts = {}
+    if not l:
+        return counts
+    
+    element = l[0]
+    counts[element] = counts.get(element, 0) + 1
+    return func1(l[1:], counts)
+
 
 
 # %% ----------------------------------- FUNC2 ------------------------- #
@@ -82,10 +90,35 @@ NOTE: It is possible to call recursive functions, but they cannot be
 internal (recursive functions can only be defined at the top level of the 
 module and cannot be defined within other functions or classes).
 """
-
+def check(path):
+    with open(path, "r") as f:
+        file = f.read()
+    if not file:
+        return False
+    return file[0] == file[-1]
 
 def func2(root):
-    pass
+    result = {}
+    current_matches = set()
+
+    entries = os.listdir(root)
+
+    for entry in entries:
+        full_path = root + '/' + entry
+        
+        if os.path.isfile(full_path):
+            if entry.endswith('.txt') and check(full_path):
+                current_matches.add(entry)
+        elif os.path.isdir(full_path):
+            subdir_results = func2(full_path)
+            result.update(subdir_results)
+    if current_matches:
+        result[root] = current_matches
+    return result
+
+
+
+
 
 
 #%% ----------------------------------- FUNC3 ------------------------- #
@@ -123,7 +156,9 @@ module and cannot be defined within other functions or classes).
 
 
 def func3(a: int, b: int) -> int:
-    pass
+    if b == 0:
+        return a
+    return func3(b, a % b)
 
 
 # ---------------------------- FUNC 4 ---------------------------- #
@@ -159,7 +194,23 @@ value greater than the input value k.
 
 
 def func4(root, k):
-    pass
+    return myfunc4(root, k, 0)
+
+def myfunc4(node, k, level):
+    if node is None:
+        return (0,0)
+    
+    if level % 2 == 0:
+        odd_even = node.value
+    else:
+        odd_even = - node.value
+
+    count = 1 if node.value > k else 0
+    left_sum, left_count = myfunc4(node.left, k, level + 1)
+    right_sum, right_count = myfunc4(node.right, k, level + 1)
+
+    return (odd_even + left_sum + right_sum, count + left_count + right_count)
+
 
 
 if __name__ == '__main__':
